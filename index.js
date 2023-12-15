@@ -135,7 +135,7 @@ app.get("/user", async function (req, res, next) {
         const users = await UserModel.find();
         res.status(200).json(users);
     } catch (err) {
-        next(err);
+        res.status(500).send(err)
     }
 });
 
@@ -146,7 +146,7 @@ app.get("/user/:id", async function (req, res, next) {
         const user = await UserModel.findById(req.params.id).populate('savedPins')
         res.status(200).json(user);
     } catch (err) {
-        console.log(err);
+        res.status(500).send(error)
     }
 });
 
