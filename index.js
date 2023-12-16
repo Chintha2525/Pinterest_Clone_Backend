@@ -368,29 +368,21 @@ app.post("/savepin/:userId/:pinID", async function (req, res) {
 //**************CREATE COMMENT*************** 
 
 app.post("/comment/:pinId", async function (req, res) {
-    const pinId = req.params.pinId;
-
-    try {
-        // Create a new comment using the CommentModel
-        const newComment = new CommentModel({ ...req.body });
-        const savedComment = await newComment.save();
-
-        // Update the comment array of the pin
-        const updatedPin = await PinModel.findByIdAndUpdate(
-            pinId,
-            { $push: { comments: savedComment._id } },
-            { new: true } // Return the updated pin
-        );
-
-        res.status(200).json({
-            success: true,
-            message: "Comment submitted",
-            data: { comment: savedComment, updatedPin }
-        });
-    } catch (error) {
-        console.error("Error submitting comment:", error);
-        res.status(500).json({ success: false, message: "Failed to submit comment", data: error });
-    }
+        const pinId  = req.params.pinId
+        const newReview = new CommentModel({...req.body}) 
+        
+        try {
+           const savedComment = await newReview.save()
+     
+           // after creating a new review now update the comment array of the tour 
+           await PinModel.findByIdAndUpdate(pinId, {
+              $push: {comments: savedComment._id}
+           })
+     
+           res.status(200).json({success:true, message:"Comment submitted", data:savedComment})
+        } catch (error) {
+           res.status(500).json({success:false, message:"Failed to submit",data:error})
+        }
 });
 
 
